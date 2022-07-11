@@ -33,10 +33,10 @@ public class FXMLController {
     private ComboBox<Integer> boxAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxMese"
-    private ComboBox<?> boxMese; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxGiorno"
-    private ComboBox<?> boxGiorno; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxGiorno; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnCreaReteCittadina"
     private Button btnCreaReteCittadina; // Value injected by FXMLLoader
@@ -79,6 +79,33 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
+    	
+    	txtResult.clear();
+    	
+    	Integer anno = boxAnno.getValue();
+    	Integer mese = boxMese.getValue();
+    	boxGiorno.getItems().addAll(model.getGiorni(mese, anno));
+    	Integer giorno = boxGiorno.getValue();
+    	
+    	if(anno == null || mese == null || giorno == null) {
+    		txtResult.appendText("Selezionare una data");
+    		return;
+    	}
+    	
+    	String n = txtN.getText();
+    	try {
+    		
+    		Integer nInserito = Integer.parseInt(n);
+    		
+    		if(nInserito < 1 || nInserito > 10) {
+    			txtResult.appendText("Inseriro un numero compreso tra 1 e 10");
+    			return;
+    		}
+    		
+    	}catch(NumberFormatException e) {
+    		txtResult.appendText("Inserire un numero");
+    		return;
+    	}
 
     }
 
@@ -97,5 +124,6 @@ public class FXMLController {
     public void setModel(Model model) {
     	this.model = model;
     	boxAnno.getItems().addAll(model.getAnni());
+    	boxMese.getItems().addAll(model.getMesi());
     }
 }

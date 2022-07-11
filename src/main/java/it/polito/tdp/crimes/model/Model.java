@@ -27,6 +27,12 @@ public class Model {
 	
 	private List<Distretto> vertici;
 	
+	private Map<Integer, Distretto> idMap;
+	
+	private List<Integer> mesi;
+	
+	private List<Integer> giorni;
+	
 	public Model() {
 		
 		this.dao = new EventsDao();
@@ -38,7 +44,9 @@ public class Model {
 		
 		this.grafo = new SimpleWeightedGraph<Distretto, DefaultWeightedEdge>(DefaultWeightedEdge.class);
 		
-		this.vertici = this.dao.getVertici(anno);
+		this.idMap = new HashMap<Integer, Distretto>();
+		
+		this.vertici = this.dao.getVertici(anno,idMap);
 		
 		Graphs.addAllVertices(this.grafo, this.vertici);
 		
@@ -69,6 +77,12 @@ public class Model {
 		}
 		return result;
 	}
+	
+	public void Simula(int anno, int mese, int giorno, int n) {
+		Simulatore s = new Simulatore(this.grafo, this.idMap);
+		s.init(n, anno, mese, giorno);
+		s.run();
+	}
 
 
 	public boolean isCreato() {
@@ -81,5 +95,15 @@ public class Model {
 	public List<Integer> getAnni() {
 		return anni;
 	}
+
+	public List<Integer> getMesi() {
+		return this.dao.getMesi();
+	}
+
+	public List<Integer> getGiorni(int mese, int anno) {
+		return this.dao.getGiorni(mese, anno);
+	}
+	
+	
 	
 }
